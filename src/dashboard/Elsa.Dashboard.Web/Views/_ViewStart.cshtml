@@ -1,0 +1,19 @@
+@{
+    Layout = "_Layout";
+}
+
+
+@{
+    @using System.Web;
+
+    var controller = Context.Request.RouteValues["Controller"].ToString();
+    // .RouteData.Values["Controller"].ToString();
+    if (controller == "Edit")
+    {
+        Layout = "Shared/_LayoutEdit.cshtml";
+    }
+    else
+    {
+        Layout = "Shared/_Layout.cshtml";
+    }
+}

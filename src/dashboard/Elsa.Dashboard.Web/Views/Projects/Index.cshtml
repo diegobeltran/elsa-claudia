@@ -1,0 +1,310 @@
+﻿<!DOCTYPE html>
+<!-- Dev Version links to full versions (non-minified) of javascript and css files -->
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>freeboard</title>
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta name="viewport" content="width = device-width, initial-scale = 1, user-scalable = no" />
+
+    <link href="~/lib/css/thirdparty/jquery.gridster.min.css" rel="stylesheet" />
+    <link href="~/lib/css/thirdparty/codemirror.css" rel="stylesheet" />
+    <link href="~/lib/css/thirdparty/codemirror-ambiance.css" rel="stylesheet" />
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+    <link href="~/lib/css/freeboard/styles.css" rel="stylesheet" />
+    <link href="~/lib/custom.css" rel="stylesheet" />
+    <link href="~/font/css/open-iconic-bootstrap.css" rel="stylesheet" />
+
+    <!-- Favicon -->
+    <link href="~/_content/Elsa.Dashboard/assets/img/brand/favicon.png" rel="icon" type="image/png">
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet">
+    <!-- Icons -->
+    <link href="~/_content/Elsa.Dashboard/assets/js/plugins/nucleo/css/nucleo.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css" integrity="sha256-+N4/V/SbAFiW1MPBCXnfnP9QSN3+Keu+NlB+0ev/YKQ=" crossorigin="anonymous" />
+    <!-- CSS Files -->
+    <link href="~/_content/Elsa.Dashboard/assets/css/argon-dashboard.css?v=1.1.0" rel="stylesheet" />
+    <link href="~/_content/Elsa.Dashboard/assets/css/elsa.css?v=1.1.0" rel="stylesheet" />
+
+
+
+    <script src="@Url.Content("/lib/js/thirdparty/head.js")"></script>
+    <script type="module" src="~/_content/Elsa.Dashboard/assets/js/plugins/elsa-workflows/elsa-workflow-designer/elsa-workflow-designer.esm.js"></script>
+    <script nomodule="" src="~/_content/Elsa.Dashboard/assets/js/plugins/elsa-workflows/elsa-workflow-designer/elsa-workflow-designer.js"></script>
+
+    <script src="~/lib/pouchdb-7.1.1.js"></script>
+
+    <style>
+
+        html {
+            background-color: #101214;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        body {
+            background-color: #172b4d;
+            color: #8b8b8b;
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            font-size: 14px;
+            line-height: 20px;
+            height: 100%;
+            overflow-x: hidden;
+            overflow-y: auto;
+        }
+
+        .iconcolor {
+            color: blue;
+        }
+
+       
+
+        .headerpaneedit {
+            background-color: #272727 !important;
+        }
+
+        .headerpanenoedit {
+            background-color: transparent !important;
+        }
+
+        .paneedit {
+            background-color: #272727 !important;
+        }
+
+        .panenoedit {
+            background-color: transparent !important;
+        }
+
+        .removeborder {
+            border-width: 0px;
+        }
+        /*.styled-select select {
+                width: 414px;
+                height: 30px;
+                -webkit-appearance: none;
+                border: 1px solid #3d3d3d;
+                background: url(../../../img/dropdown-arrow.png) no-repeat right #272727;
+            }*/
+        /*select {
+                        width: 220px;
+                        background-color: #272727;
+                        height: 27px;
+                    }*/
+
+
+
+        #headerwindow {
+            text-align: center;
+            top: 5%;
+            /*-ms-transform: translateX(-50%);
+                -webkit-transform: translateX(-50%);
+                transform: translateX(-50%);*/
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%
+        }
+
+            #headerwindow .buttonBack {
+                width: 33%;
+                float: left;
+                text-align: left;
+            }
+
+            #headerwindow .buttonClose {
+                width: 33%;
+                float: right;
+                text-align: right;
+            }
+
+
+            #headerwindow .titlewid {
+                width: 33%;
+                float: left;
+                text-align: center;
+            }
+
+
+        .clseditCalculated {
+            margin-top: 5px;
+            vertical-align: bottom; /* Y */
+        }
+
+
+        .calculated-setting-row {
+            min-height: 80px;
+            vertical-align: bottom; /* Y */
+        }
+
+        .clseditCalculated .ul.board-toolbar {
+            top: 30px;
+        }
+
+        .clseditCalculated li {
+            display: inline;
+            padding-left: 3px;
+            padding-right: 3px;
+            /*background-color: black;*/
+            vertical-align: bottom; /* Y */
+        }
+
+        .ul.datasource-input-suffix {
+            top: 50px;
+            vertical-align: bottom; /* Y */
+        }
+
+
+
+        textarea .calculated-value-input {
+            position: relative;
+        }
+
+      
+    </style>
+
+
+    @*@await RenderSectionAsync("HeadScripts", false)*@
+
+
+
+    <script type="text/javascript">
+
+
+    </script>
+
+
+
+
+</head>
+
+<body>
+    <!-- Modal -->
+    <div class="modal fade" id="formModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    ...
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div style="min-height: 40%;background-color: #172b4d;background-image: url() ;background-image: url('css/background.png');">
+
+      
+    </div>
+
+    <div id="board-content" style="top:50%;background-color:#172b4d">
+        
+
+        <a href="#!" class="col-4 shortcut-item" data-bind="click: createPane2">
+            <span class="shortcut-media avatar rounded-circle bg-gradient-blue">
+                <span class="oi oi-plus" style="color:aliceblue"></span>
+            </span>
+
+        </a>
+
+        <img id="dash-logo" data-bind="attr:{src: header_image}, visible:header_image()">
+        <div class="gridster responsive-column-width">
+            <ul data-bind="grid: true" class="row">
+            </ul>
+        </div>
+    </div>
+
+    <div class="main-content" style="top:100px;display:none" id="main-content">
+        @*@await Html.PartialAsync("TopBar")*@
+        <!-- End Navbar -->
+        <!-- Header -->
+        <!-- Page content -->
+        @*@await Html.PartialAsync("Notifications")
+            @await RenderSectionAsync("ContentHeader", false)
+            @RenderBody()*@
+    </div>
+
+    <header id="main-header" data-bind="if:allow_edit">
+        
+        <div id="toggle-header" data-bind="click: toggleEditing" style="display:none">
+            <i id="toggle-header-icon" class="oi oi-chevron-bottom iconcolor"></i>
+        </div>
+    </header>
+
+    <div style="display:hidden">
+        <ul data-bind="template: { name: 'pane-template', foreach: panes}">
+        </ul>
+    </div>
+
+
+
+    <script type="text/html" id="pane-template">
+        <li data-bind="pane: true">
+            <header style="display:none">
+                <h1 data-bind="text: title"></h1>
+                <ul class="board-toolbar pane-tools" style="display:none">
+                    <li id="addPaneControl" data-bind="pluginEditor: {operation: 'add', type: 'widget'}">
+                        <span class="oi oi-plus"></span>
+                    </li>
+                    <li data-bind="pluginEditor: {operation: 'edit', type: 'pane'}">
+                        <span class="oi oi-wrench"></span>
+                    </li>
+                    <li data-bind="pluginEditor: {operation: 'delete', type: 'pane'}">
+                        <span class="oi oi-trash"></span>
+                    </li>
+                </ul>
+            </header>
+            <section data-bind="foreach: widgets">
+                <div class="sub-section" data-bind="css: 'sub-section-height-' + height()">
+                    <div class="widget" data-bind="widget: true, css:{fillsize:fillSize}"></div>
+                    <div class="sub-section-tools">
+                        <ul class="board-toolbar">
+                            <!-- ko if:$parent.widgetCanMoveUp($data) -->
+                            <li data-bind="click:$parent.moveWidgetUp"><span class="oi oi-chevron-top iconcolor"></span></li>
+                            <!-- /ko -->
+                            <!-- ko if:$parent.widgetCanMoveDown($data) -->
+                            <li data-bind="click:$parent.moveWidgetDown"><span class="oi oi-chevron-down iconcolor"></span></li>
+                            <!-- /ko -->
+                            <li data-bind="pluginEditor: {operation: 'edit', type: 'widget'}"><span class="oi oi-wrench iconcolor"></span></li>
+                            <!--<li data-bind="pluginEditor: {operation: 'delete', type: 'widget'}"><span class="oi oi-trash iconcolor"></span></i></li>-->
+                            <li onclick="deletePane(this)"><span class="oi oi-trash iconcolor"></span></li>
+                        </ul>
+            </div>
+        </div>
+    </section>
+    <!-- <span class="gs-resize-handle gs-resize-handle-both">x</span>-->
+</li>
+    </script>
+    <script>
+
+
+    </script>
+    <!--<script src="/_content/Elsa.Dashboard/assets/js/workflow-editor.js"></script>-->
+    @*<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>*@
+    @*<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>*@
+    @*<script src="~/_content/Elsa.Dashboard/assets/js/plugins/jquery/dist/jquery.min.js"></script>*@
+    @*<script src="~/_content/Elsa.Dashboard/assets/js/plugins/bootstrap/dist/js/bootstrap.bundle.min.js"></script>*@
+    @*<script src="@Url.Content("/lib/cement.js")"></script>*@
+    @*@await Html.PartialAsync("CustomScripts")
+        @await RenderSectionAsync("FootScripts", false)*@
+
+    <script src="~/lib/project.js"></script>
+    <script src="~/lib/custom.js"></script>
+    <script>
+
+    </script>
+
+</body>
+
+</html>

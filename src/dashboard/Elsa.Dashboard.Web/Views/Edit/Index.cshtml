@@ -1,0 +1,760 @@
+@{
+    var userName = User.Identity.IsAuthenticated ? User.Identity.Name : "diego";
+    var email = User.Identity.IsAuthenticated ? User.Identity.Name : "anonymous@domain.com";
+}
+
+
+
+<!DOCTYPE html>
+<!-- Dev Version links to full versions (non-minified) of javascript and css files -->
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>freeboard</title>
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta name="viewport" content="width = device-width, initial-scale = 1, user-scalable = no" />
+
+    <link href="~/lib/css/thirdparty/jquery.gridster.min.css" rel="stylesheet" />
+    <link href="~/lib/css/thirdparty/codemirror.css" rel="stylesheet" />
+    <link href="~/lib/css/thirdparty/codemirror-ambiance.css" rel="stylesheet" />
+
+
+
+    <link href="~/lib/css/freeboard/styles.css" rel="stylesheet" />
+    <link href="~/lib/custom.css" rel="stylesheet" />
+    <link href="~/font/css/open-iconic-bootstrap.css" rel="stylesheet" />
+    <!-- Favicon -->
+    <link href="~/_content/Elsa.Dashboard/assets/img/brand/favicon.png" rel="icon" type="image/png">
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet">
+    <!-- Icons -->
+    <link href="~/_content/Elsa.Dashboard/assets/js/plugins/nucleo/css/nucleo.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css" integrity="sha256-+N4/V/SbAFiW1MPBCXnfnP9QSN3+Keu+NlB+0ev/YKQ=" crossorigin="anonymous" />
+    <!-- CSS Files -->
+
+
+
+
+
+    <script src="@Url.Content("/lib/js/thirdparty/head.js")"></script>
+    <script type="module" src="~/_content/Elsa.Dashboard/assets/js/plugins/elsa-workflows/elsa-workflow-designer/elsa-workflow-designer.esm.js"></script>
+    <script nomodule="" src="~/_content/Elsa.Dashboard/assets/js/plugins/elsa-workflows/elsa-workflow-designer/elsa-workflow-designer.js"></script>
+
+    <script src="~/lib/pouchdb-7.1.1.js"></script>
+
+
+
+
+
+    <style>
+
+        html {
+            background-color: #101214;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        body {
+            background-color: #101214;
+            color: #8b8b8b;
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            font-size: 14px;
+            line-height: 20px;
+            height: 100%;
+            overflow-x: hidden;
+            overflow-y: auto;
+        }
+
+        .iconcolor {
+            color: blue;
+        }
+
+        .gridster .gs-w {
+            background: #2a2a2a
+        }
+
+        .headerpaneedit {
+            background-color: #272727 !important;
+        }
+
+        .headerpanenoedit {
+            background-color: transparent !important;
+        }
+
+        .paneedit {
+            background-color: #272727 !important;
+        }
+
+        .panenoedit {
+            background-color: transparent !important;
+        }
+
+        .removeborder {
+            border-width: 0px;
+        }
+        /*.styled-select select {
+                width: 414px;
+                height: 30px;
+                -webkit-appearance: none;
+                border: 1px solid #3d3d3d;
+                background: url(../../../img/dropdown-arrow.png) no-repeat right #272727;
+            }*/
+        /*select {
+                        width: 220px;
+                        background-color: #272727;
+                        height: 27px;
+                    }*/
+
+
+
+        #headerwindow {
+            text-align: center;
+            top: 5%;
+            /*-ms-transform: translateX(-50%);
+                -webkit-transform: translateX(-50%);
+                transform: translateX(-50%);*/
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%
+        }
+
+            #headerwindow .buttonBack {
+                width: 33%;
+                float: left;
+                text-align: left;
+            }
+
+            #headerwindow .buttonClose {
+                width: 33%;
+                float: right;
+                text-align: right;
+            }
+
+
+            #headerwindow .titlewid {
+                width: 33%;
+                float: left;
+                text-align: center;
+            }
+
+
+        .clseditCalculated {
+            margin-top: 5px;
+            vertical-align: bottom; /* Y */
+        }
+
+
+        .calculated-setting-row {
+            min-height: 80px;
+            vertical-align: bottom; /* Y */
+        }
+
+        .clseditCalculated .ul.board-toolbar {
+            top: 30px;
+        }
+
+        .clseditCalculated li {
+            display: inline;
+            padding-left: 3px;
+            padding-right: 3px;
+            /*background-color: black;*/
+            vertical-align: bottom; /* Y */
+        }
+
+        .ul.datasource-input-suffix {
+            top: 50px;
+            vertical-align: bottom; /* Y */
+        }
+
+
+
+        textarea .calculated-value-input {
+            position: relative;
+        }
+
+        #stateindicator {
+        }
+    </style>
+
+
+    @*@await RenderSectionAsync("HeadScripts", false)*@
+
+
+
+    <script type="text/javascript">
+
+
+    </script>
+
+    <style>
+
+                /*! gridster.js - v0.6.10 - 2015-05-31
+        * https://dsmorse.github.io/gridster.js/
+        * Copyright (c) 2015 ducksboard; Licensed MIT */
+
+
+                table {
+                    border-collapse: collapse;
+                    border-spacing: 0;
+                }
+
+                .demo {
+                    margin: 3em 0;
+                    padding: 7.5em 0 5.5em;
+                    background: #26941f;
+                }
+
+                    .demo:hover .gridster {
+                        margin: 0 auto;
+                        opacity: .8;
+                        -webkit-transition: opacity .6s;
+                        -moz-transition: opacity .6s;
+                        -o-transition: opacity .6s;
+                        -ms-transition: opacity .6s;
+                        transition: opacity .6s;
+                    }
+
+                .content {
+                    color: white;
+                }
+
+                .gridster .gs-w {
+                    background: #61A9CF;
+                    cursor: pointer;
+                    -webkit-box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+                    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+                }
+
+                .gridster .player {
+                    -webkit-box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3);
+                    box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3);
+                    background: #BBB;
+                }
+
+                .gridster .gs-w.try {
+                    background-image: url(../img/sprite.png);
+                    background-repeat: no-repeat;
+                    background-position: 37px -169px;
+                }
+
+                .gridster .preview-holder {
+                    border: none !important;
+                    border-radius: 0 !important;
+                    background: red !important;
+                }
+
+                .gridster ul {
+                    background-color: #EFEFEF;
+                }
+
+                .gridster li {
+                    font-size: 1em;
+                    font-weight: bold;
+                    text-align: center;
+                    line-height: 100%;
+                }
+
+                ul {
+                    list-style-type: none;
+                }
+
+                li {
+                    list-style: none;
+                    font-weight: bold;
+                }
+
+                .gridster-box {
+                    position: relative;
+                    width: 100%;
+                    height: 100%;
+                }
+
+                .controls {
+                    margin-bottom: 20px;
+                }
+                /*# sourceMappingURL=demos/assets/css/demo.css.map */
+
+    </style>
+
+
+
+</head>
+
+<body>
+    <!-- Modal -->
+    <div class="modal fixed-left fade" id="formModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    ...
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal()" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="tabsDashBoard">
+
+    </div>
+
+    @*<partial name="Tabs" />*@
+    @*@await Html.PartialAsync("Tabs")*@
+    @*@{
+            Html.Display("Employee");
+        }*@
+
+    @*<ul class="pos-absolute" data-role="materialtabs" style="z-index:1">
+            <li><a href="#games">Games</a></li>
+            <li><a href="#applications">Applications</a></li>
+            <li class="active"><a href="#music">Music</a></li>
+            <li><a href="#films">Films</a></li>
+            <li><a href="#press">Press</a></li>
+            <li><a href="#books">Books</a></li>
+        </ul>
+        <div style="margin-top: 112px;display:none">
+            <div id="games">Games</div>
+            <div id="applications">Applications</div>
+            <div id="music">Music</div>
+            <div id="films">Films</div>
+            <div id="press">Press</div>
+            <div id="books">Books</div>
+        </div>*@
+    <div id="board-content" style="top:30px">
+        <img id="dash-logo" data-bind="attr:{src: header_image}, visible:header_image()">
+        <div class="gridster responsive-column-width">
+            <ul data-bind="grid: true" style="background-color:darkslategrey">
+            </ul>
+        </div>
+    </div>
+
+    <div class="main-content" style="top:100px;display:none" id="main-content">
+        @*@await Html.PartialAsync("TopBar")*@
+        <!-- End Navbar -->
+        <!-- Header -->
+        <!-- Page content -->
+        @*@await Html.PartialAsync("Notifications")
+            @await RenderSectionAsync("ContentHeader", false)
+            @RenderBody()*@
+    </div>
+
+    <div style="display:none">
+        <ul id="mmnusettings">
+            <li class="nav-item dropdown">
+                <a href="#" class="app-bar-item" role="button" onclick="mnuDashboard()" style="margin-right:10px" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <span class="mif-cogs"></span>
+                </a>
+
+                <div class="dropdown-menu  dropdown-menu-right" id="mnuDashboard">
+                    <div class="dropdown-header noti-title">
+                        <h6 class="text-overflow m-0">Welcome!</h6>
+                    </div>
+                    <a href="#!" class="dropdown-item">
+                        <i class="ni ni-single-02"></i>
+                        <span>My profile</span>
+                    </a>
+                    <a href="#!" class="dropdown-item">
+                        <i class="ni ni-settings-gear-65"></i>
+                        <span>Settings</span>
+                    </a>
+                    <a href="#!" class="dropdown-item">
+                        <i class="ni ni-calendar-grid-58"></i>
+                        <span>Activity</span>
+                    </a>
+                    <a class="dropdown-item" data-bind="click: loadDashboardFromLocalFile">
+                        <i class="oi oi-cloud-upload"></i>
+                        <span>Load dashboard</span>
+
+                    </a>
+
+                    <a class="dropdown-item" href="#" style="display: block;" data-bind="click: saveDashboard"
+                       data-pretty="true">
+                        <i class="oi oi-cloud-download"></i>
+                        <span>Download Pretty</span>
+                    </a>
+                    <a class="dropdown-item" href="#" style="display: block;" data-bind="click: saveDashboard"
+                       data-pretty="false">
+                        <i class="oi oi-cloud-download"></i>
+                        <span>Download Minify</span>
+                    </a>
+
+                    <a href="#!" class="dropdown-item">
+                        <i class="ni ni-support-16"></i>
+                        <span>Support</span>
+                    </a>
+                    <div class="dropdown-divider"></div>
+                    <a href="#!" class="dropdown-item">
+                        <i class="ni ni-user-run"></i>
+                        <span>Logout</span>
+                    </a>
+                </div>
+            </li>
+        </ul>
+
+
+
+    </div>
+
+
+
+    <header id="main-header" data-bind="if:allow_edit" style="display: block;top: -15px;left: 20%;z-index: 10000;width: 30%;">
+        <nav class="navbar navbar-expand-lg navbar-dark " id="navmenu">
+            <a class="navbar-brand" href="#">Pollito</a>
+
+
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <div class="navbar-collapse-header">
+                    <div class="row">
+                        <div class="col-6 collapse-brand">
+                            @*<a href="javascript:void(0)">
+                                    <img src="../../assets/img/brand/blue.png">
+                                </a>*@
+                        </div>
+                        <div class="col-6 collapse-close">
+                            <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbar-default" aria-expanded="false" aria-label="Toggle navigation">
+                                <span></span>
+                                <span></span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <ul class="navbar-nav align-items-center  ml-auto ml-md-0" style="width:100%">
+
+                    <li class="nav-item ml-auto" style="float:left">
+                        <form class="form-inline my- my-lg-0">
+                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#formModal" id="btnModal" style="display:none">
+                                Launch demo modal
+                            </button>
+                            <!--<input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">-->
+                            <ul class="navbar-nav align-items-center  ml-md-auto ">
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <i class="ni ni-ungroup"></i>
+                                    </a>
+                                    <div class="dropdown-menu dropdown-menu-lg dropdown-menu-dark bg-default  dropdown-menu-right ">
+                                        <div class="row shortcuts px-4">
+                                            <a href="#!" class="col-4 shortcut-item">
+                                                <span class="shortcut-media avatar rounded-circle bg-gradient-red">
+                                                    <i class="ni ni-calendar-grid-58"></i>
+                                                </span>
+                                                <small>Calendar</small>
+                                            </a>
+                                            <a href="#!" class="col-4 shortcut-item">
+                                                <span class="shortcut-media avatar rounded-circle bg-gradient-orange">
+                                                    <i class="ni ni-email-83"></i>
+                                                </span>
+                                                <small>Email</small>
+                                            </a>
+                                            <a href="#!" class="col-4 shortcut-item">
+                                                <span class="shortcut-media avatar rounded-circle bg-gradient-info">
+                                                    <i class="ni ni-credit-card"></i>
+                                                </span>
+                                                <small>Payments</small>
+                                            </a>
+                                            <a href="#!" class="col-4 shortcut-item">
+                                                <span class="shortcut-media avatar rounded-circle bg-gradient-green">
+                                                    <i class="ni ni-books"></i>
+                                                </span>
+                                                <small>Reports</small>
+                                            </a>
+                                            <a href="#!" class="col-4 shortcut-item">
+                                                <span class="shortcut-media avatar rounded-circle bg-gradient-purple">
+                                                    <i class="ni ni-pin-3"></i>
+                                                </span>
+                                                <small>Maps</small>
+                                            </a>
+                                            <a href="#!" class="col-4 shortcut-item">
+                                                <span class="shortcut-media avatar rounded-circle bg-gradient-yellow">
+                                                    <i class="ni ni-basket"></i>
+                                                </span>
+                                                <small>Shop</small>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </li>
+
+
+
+                                <li class="nav-item dropdown" id="drpworkflows">
+                                    <a class="nav-link" href="#" role="button" onclick="loadworkflows()" aria-expanded="false">
+                                        <i class="ni ni-bell-55"></i>
+                                    </a>
+                                </li>
+                                <li class="nav-item dropdown" id="drpDataSources">
+                                    <a class="nav-link" href="#" role="button" data-toggle="dropdown" onclick="loadDatasources()" aria-haspopup="true" aria-expanded="false">
+                                        <i class="ni ni-bell-55"></i>
+                                    </a>
+                                    <div class="dropdown-menu dropdown-menu-xl  dropdown-menu-right  py-0 overflow-hidden" id="listDatasources">
+                                        <!-- Dropdown header -->
+                                        <div class="px-3 py-3">
+                                            <h6 class="text-sm text-muted m-0">You have <strong class="text-primary" data-bind="text:datasources().length"></strong> Datasource.</h6>
+                                        </div>
+                                        <!-- List group -->
+                                        <div class="list-group list-group-flush" data-bind="foreach: datasources">
+                                            <a href="#!" class="list-group-item list-group-item-action">
+                                                <div class="row align-items-center">
+                                                    <div class="col-auto">
+                                                        <!-- Avatar -->
+                                                        <img alt="Image placeholder" src="../assets/img/theme/team-1.jpg" class="avatar rounded-circle">
+                                                    </div>
+                                                    <div class="col ml--2">
+                                                        <div class="d-flex justify-content-between align-items-center">
+                                                            <div>
+                                                                <!-- <span class="text-button datasource-name"
+                                                                data-bind="text: name, pluginEditor: {operation: 'edit', type: 'datasource'}"></span> -->
+                                                                <h4 class="mb-0 text-sm" data-bind="text: name, pluginEditor: {operation: 'edit', type: 'datasource'}"></h4>
+                                                            </div>
+                                                            <div class="text-right text-muted">
+                                                                <ul class="board-toolbar">
+                                                                    <li data-bind="click: updateNow">
+                                                                        <i class="oi oi-reload iconcolor"></i>
+                                                                    </li>
+                                                                    <li data-bind="pluginEditor: {operation: 'delete', type: 'datasource'}">
+                                                                        <i class="oi oi-trash iconcolor"></i>
+                                                                    </li>
+                                                                </ul>
+                                                            </div>
+                                                        </div>
+                                                        <p class="text-sm mb-0">Let's meet at Starbucks at 11:30. Wdyt?</p>
+                                                    </div>
+                                                </div>
+                                            </a>
+                                        </div>
+                                    </div>
+
+                                </li>
+                            </ul>
+
+
+                            @*<button type="button" class="btn btn-secondary" data-bind="click: createPane" style="margin-right:10px" data-toggle="tooltip" data-placement="top" title="Add Pane"><i class="ni ni-ungroup"></i></button>
+
+                                <button type="button" class="btn btn-secondary" data-bind="pluginEditor: {operation: 'add', type: 'datasource'}" style="margin-right:10px" data-toggle="tooltip" data-placement="top" title="Add DataSource"><i class="ni ni-world-2"></i></button>
+
+                                <button type="button" class="btn btn-secondary" onclick="createWorkflow()" style="margin-right:10px" data-toggle="tooltip" data-placement="top" title="WorkFlow"><i class="ni ni-ruler-pencil"></i></button>
+
+                                @await Html.PartialAsync("buttons")*@
+
+                        </form>
+                    </li>
+                </ul>
+
+            </div>
+        </nav>
+
+        <div id="admin-bar" style="display:none">
+            <div id="admin-menu">
+                <div id="board-tools">
+                    <!--<h1 id="board-logo" class="title bordered">freeboard</h1>-->
+                    <h2 class="title">FILES</h2>
+                    <ul class="nav flex-column">
+                        <li class="nav-item" data-bind="click: loadDashboardFromLocalFile">
+                            <a id="full-screen-icon" class="nav-link" href="#">Load dashboard</a>
+                        </li>
+                        <li class="nav-item">
+                            <!--<i class="oi oi-box" style=" color:white"></i>-->
+                            <a class="nav-link" href="#" data-bind="click: saveDashboardClicked">Save</a>
+                            <label class="nav-link" href="#" style="display: none;" data-bind="click: saveDashboard"
+                                   data-pretty="true">[Pretty]</label>
+                            <label class="nav-link" href="#" style="display: none;" data-bind="click: saveDashboard"
+                                   data-pretty="false">[Minified]</label>
+                        </li>
+                        <li id="add-pane" class="nav-item" data-bind="click: createPane2">
+                            <i class="oi oi-plus iconcolor"></i><a href="#">Add Pane</a>
+                        </li>
+                    </ul>
+                    <!--<div id="board-actions">
+                        <ul class="board-toolbar vertical">
+                            <li data-bind="click: loadDashboardFromLocalFile">
+                                <i id="full-screen-icon"
+                                   class="oi oi-data-transfer-upload"></i><label id="full-screen">
+                                    Load dashboard
+
+                                </label>
+                            </li>
+                            <li>
+                                <i class="oi oi-box" style=" color:white"></i>
+                                <label data-bind="click: saveDashboardClicked">Save Freeboard</label>
+                                <label style="display: none;" data-bind="click: saveDashboard"
+                                       data-pretty="true">[Pretty]</label>
+                                <label style="display: none;" data-bind="click: saveDashboard"
+                                       data-pretty="false">[Minified]</label>
+                            </li>
+                            <li id="add-pane" data-bind="click: createPane">
+                                <i class="icon-plus icon-white"></i><label>Add Pane</label>
+                            </li>
+                        </ul>
+                    </div>-->
+                </div>
+
+                <div id="datasources">
+                    <button type="button" id="btdev" onclick="showd()">dev</button>
+                    <button type="button" id="btnmodal" data-toggle="modal" onclick="fexample()">Launch modal</button>
+                    <h2 class="title">DATASOURCES</h2>
+
+                    @*<div class="datasource-list-container">
+                            <table class="table table-condensed sub-table" id="datasources-list"
+                                   data-bind="if: datasources().length">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Last Updated</th>
+                                        <th>&nbsp;</th>
+                                    </tr>
+                                </thead>
+                                <tbody data-bind="foreach: datasources">
+                                    <tr>
+                                        <td>
+                                            <span class="text-button datasource-name"
+                                                  data-bind="text: name, pluginEditor: {operation: 'edit', type: 'datasource'}"></span>
+                                        </td>
+                                        <td data-bind="text: last_updated"></td>
+                                        <td>
+                                            <ul class="board-toolbar">
+                                                <li data-bind="click: updateNow">
+                                                    <i class="icon-refresh icon-white"></i>
+                                                </li>
+                                                <li data-bind="pluginEditor: {operation: 'delete', type: 'datasource'}">
+                                                    <i class="icon-trash icon-white"></i>
+                                                </li>
+                                            </ul>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>*@
+
+                    <span class="text-button table-operation"
+                          data-bind="pluginEditor: {operation: 'add', type: 'datasource'}">
+                        ADD
+                    </span>
+                </div>
+
+                <div id="style-tools">
+                    <h2 class="title">STYLES</h2>
+                    <ul class="nav flex-column">
+                        <li id="add-style" class="nav-item" data-bind="pluginEditor: {operation: 'add', type: 'style'}">
+                            <a class="nav-link" href="#">Layout</a>
+                        </li>
+
+                    </ul>
+                    <div id="style-actions">
+
+                        <!--<ul class="board-toolbar vertical">
+
+
+                        </ul>-->
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div id="column-tools" class="responsive-column-width">
+            <ul class="board-toolbar left-columns">
+                <li class="column-tool add" data-bind="click: addGridColumnLeft">
+                    <span class="column-icon right"></span><span class="oi oi-arrow-left iconcolor"></span>
+                </li>
+                <li class="column-tool sub" data-bind="click: subGridColumnLeft">
+                    <span class="column-icon left"></span><span class="oi oi-arrow-right iconcolor"></span>
+                </li>
+            </ul>
+            <ul class="board-toolbar right-columns">
+                <li class="column-tool sub" data-bind="click: subGridColumnRight">
+                    <span class="column-icon right"></span><span class="oi oi-arrow-left iconcolor"></span>
+                </li>
+                <li class="column-tool add" data-bind="click: addGridColumnRight">
+                    <span class="column-icon left"></span><span class="oi oi-arrow-right iconcolor"></span>
+                </li>
+            </ul>
+        </div>
+        <div id="toggle-header" data-bind="click: toggleEditing">
+            <i id="toggle-header-icon" class="oi oi-chevron-bottom iconcolor"></i>
+        </div>
+    </header>
+
+    <div style="display:hidden">
+        <ul data-bind="template: { name: 'pane-template', foreach: panes}">
+        </ul>
+    </div>
+    <div style="top:50%;float:left;position:absolute;left:90%">
+        <div class="multi-action">
+            <button class="action-button rotate-minus bg-red fg-white"
+                    onclick="$(this).toggleClass('active')">
+                <span class="icon"><span class="mif-plus"></span></span>
+            </button>
+            <ul class="actions drop-top">
+                <li class="bg-blue"><a href="#" data-bind="click: createPane"><span class="ni ni-ungroup"></span></a></li>
+                <li class="bg-teal"><a href="#" data-bind="pluginEditor: {operation: 'add', type: 'datasource'}"><span class="mif-database"></span></a></li>
+                <li class="bg-pink"><a href="#"><span class="mif-alarm"></span></a></li>
+
+            </ul>
+        </div>
+    </div>
+
+    <script type="text/html" id="pane-template">
+        <li data-bind="pane: true">
+            <header>
+                <h1 data-bind="text: title"></h1>
+                <ul class="board-toolbar pane-tools">
+                    <li data-bind="pluginEditor: {operation: 'add', type: 'widget'}">
+                        <span class="oi oi-plus"></span>
+                    </li>
+                    <li data-bind="pluginEditor: {operation: 'edit', type: 'pane'}">
+                        <span class="oi oi-wrench"></span>
+                    </li>
+                    <li data-bind="pluginEditor: {operation: 'delete', type: 'pane'}">
+                        <span class="oi oi-trash"></span>
+                    </li>
+                </ul>
+            </header>
+            <section data-bind="foreach: widgets">
+                <div class="sub-section" data-bind="css: 'sub-section-height-' + height()">
+                    <div class="widget" data-bind="widget: true, css:{fillsize:fillSize}"></div>
+                    <div class="sub-section-tools">
+                        <ul class="board-toolbar">
+                            <!-- ko if:$parent.widgetCanMoveUp($data) -->
+                            <li data-bind="click:$parent.moveWidgetUp"><span class="oi oi-chevron-top iconcolor"></span></li>
+                            <!-- /ko -->
+                            <!-- ko if:$parent.widgetCanMoveDown($data) -->
+                            <li data-bind="click:$parent.moveWidgetDown"><span class="oi oi-chevron-down iconcolor"></span></li>
+                            <!-- /ko -->
+                            <li data-bind="pluginEditor: {operation: 'edit', type: 'widget'}"><span class="oi oi-wrench iconcolor"></span></li>
+                            <li data-bind="pluginEditor: {operation: 'delete', type: 'widget'}"><span class="oi oi-trash iconcolor"></span></i></li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+            <!-- <span class="gs-resize-handle gs-resize-handle-both">x</span>-->
+        </li>
+    </script>
+
+    <!--<script src="/_content/Elsa.Dashboard/assets/js/workflow-editor.js"></script>-->
+    @*<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>*@
+    @*<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>*@
+    @*<script src="~/_content/Elsa.Dashboard/assets/js/plugins/jquery/dist/jquery.min.js"></script>*@
+    @*<script src="~/_content/Elsa.Dashboard/assets/js/plugins/bootstrap/dist/js/bootstrap.bundle.min.js"></script>*@
+    @*<script src="@Url.Content("/lib/cement.js")"></script>*@
+    @*@await Html.PartialAsync("CustomScripts")
+        @await RenderSectionAsync("FootScripts", false)*@
+
+    <script src="~/lib/dashboard.js"></script>
+    <script src="~/lib/custom.js"></script>
+
+
+</body>
+
+</html>

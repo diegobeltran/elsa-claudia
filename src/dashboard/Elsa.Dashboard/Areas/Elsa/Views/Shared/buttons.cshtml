@@ -1,0 +1,98 @@
+@*@model WorkflowDefinitionListViewModel*@
+
+
+@{
+    var controller = Context.Request.RouteValues["Controller"].ToString();
+
+    var visi = "block";
+    var visi2 = "block";
+    if (controller.Contains("WorkflowDefinition"))
+    {
+        visi = "none";
+        visi2 = "block";
+    }
+    else
+    {
+        visi = "block";
+        visi2 = "none";
+    }
+
+}
+
+
+
+
+<div id="inibuttons" style="display:@visi">
+    <button type="button" class="btn btn-secondary" onclick="changeView(true)" style="margin-right:10px">Workflow</button>
+
+    <button type="button" class="btn btn-secondary" data-bind="click: createPane" style="margin-right:10px" data-toggle="tooltip" data-placement="top" title="Add Pane"><i class="ni ni-ungroup"></i></button>
+
+    <button type="button" class="btn btn-secondary" data-bind="pluginEditor: {operation: 'add', type: 'datasource'}" style="margin-right:10px" data-toggle="tooltip" data-placement="top" title="Add DataSource"><i class="ni ni-world-2"></i></button>
+
+
+    <button type="button" class="btn btn-secondary" onclick="createWorkflow()" style="margin-right:10px" data-toggle="tooltip" data-placement="top" title="WorkFlow"><i class="ni ni-ruler-pencil"></i></button>
+
+</div>
+
+
+<div id="createbuttons" style="display:@visi2">
+
+    <h3 id="editorCaption2" style="float:left;padding-right:15px"></h3>
+    <small id="editorDescription2" class="text-muted"></small>
+
+   
+
+    <button type="button" class="btn btn-secondary" onclick="dashboard()" style="margin-right:10px">dashboard</button>
+    <button type="button" class="btn btn-secondary" onclick="save()" style="margin-right:10px" data-toggle="tooltip" data-placement="top" title="Save Draft"><i class="ni ni-box-2"></i></button>
+    <button type="button" class="btn btn-secondary" onclick="publish()" style="margin-right:10px" data-toggle="tooltip" data-placement="top" title="Publish"><i class="ni ni-check-bold"></i></button>
+    <button type="button" class="btn btn-secondary" onclick="addActivity()" style="margin-right:10px" data-toggle="tooltip" data-placement="top" title="Add Activity"><i class="ni ni-fat-add"></i>Activity</button>
+    <button href="#!" class="btn btn-secondary" onclick="exportWorkflow()" data-toggle="tooltip" data-placement="top" title="download"><i class="ni ni-cloud-download-95"></i></button>
+    <button href="#!" class="btn btn-secondary" onclick="importWorkflow()" data-toggle="tooltip" data-placement="top" title="Upload"><i class="ni ni-cloud-upload-96"></i></button>
+    <a href="#!" class="btn btn-secondary" data-toggle="modal" data-target="#workflow-properties-modal">
+        <i class="ni ni-settings-gear-65"></i>
+    </a>
+
+
+</div>
+
+
+<script>
+
+        function save() {
+
+            $('#savedraft').click();
+        }
+
+        function publish()
+        {
+            $('#savepublish').click();
+        }
+
+
+        setTimeout(function () {
+             @if (@visi2 == "block")
+                 {
+
+                 @:$('#main-content').show();
+
+
+             }
+
+        },100)
+
+
+
+</script>
+
+
+
+@if (Model != null)
+{
+    <script>
+    @*var name = "@Model.Name";
+    var description = "@Model.Description";*@
+    updateWorkflowData();
+    </script>
+}
+
+

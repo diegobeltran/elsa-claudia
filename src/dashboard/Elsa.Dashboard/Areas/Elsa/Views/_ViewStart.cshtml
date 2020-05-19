@@ -1,0 +1,20 @@
+@*@{
+        Layout = "Shared/_Layout.cshtml";
+    }*@
+
+
+
+@{
+    @using System.Web;
+
+    var controller = Context.Request.RouteValues["Controller"].ToString();
+    // .RouteData.Values["Controller"].ToString();
+    if (controller == "Home")
+    {
+        Layout = "Shared/_CustomLayout1.cshtml";
+    }
+    else
+    {
+        Layout = "Shared/_CustomLayout1.cshtml";
+    }
+}

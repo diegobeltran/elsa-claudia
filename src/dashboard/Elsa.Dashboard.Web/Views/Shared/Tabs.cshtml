@@ -1,0 +1,35 @@
+@using Microsoft.AspNetCore.Identity
+@using Elsa.Dashboard.Web.Areas.Identity.Data
+@inject SignInManager<ElsaDashboardWebUser> SignInManager
+@inject UserManager<ElsaDashboardWebUser> UserManager
+@model ListTabsModel
+
+@{
+    //var notifications = TempData.Get<ListTabsModel>();
+}
+
+    <ul class="app-bar-present pos-absolute" data-role="materialtabs" style="z-index:1;top:0px">
+
+        @foreach (var item in Model.List)
+        {
+
+            <li><a href="@item.Id">@item.Name</a></li>
+        }
+        <li><a href="#" onclick="addDashBoard()"><i class="mif-plus"></i></a></li>
+        
+    </ul>
+        @*<ul class="pos-absolute" data-role="materialtabs" style="z-index:1">
+        @if (SignInManager.IsSignedIn(User))
+        {
+
+
+
+
+        }
+        else
+        {
+
+
+
+        }
+        </ul>*@

@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<!-- Dev Version links to full versions (non-minified) of javascript and css files -->
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>freeboard</title>
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta name="viewport" content="width = device-width, initial-scale = 1, user-scalable = no" />
+
+
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <!-- Optional JavaScript -->
+    <!-- Favicon -->
+    <link href="~/_content/Elsa.Dashboard/assets/img/brand/favicon.png" rel="icon" type="image/png">
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet">
+    <!-- Icons -->
+    <link href="~/_content/Elsa.Dashboard/assets/js/plugins/nucleo/css/nucleo.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css" integrity="sha256-+N4/V/SbAFiW1MPBCXnfnP9QSN3+Keu+NlB+0ev/YKQ=" crossorigin="anonymous" />
+    <!-- CSS Files -->
+    <link href="~/_content/Elsa.Dashboard/assets/css/argon-dashboard.css?v=1.1.0" rel="stylesheet" />
+    <link href="~/_content/Elsa.Dashboard/assets/css/elsa.css?v=1.1.0" rel="stylesheet" />
+
+
+
+    @*<script src="@Url.Content("/lib/js/thirdparty/head.js")"></script>*@
+    <script type="module" src="~/_content/Elsa.Dashboard/assets/js/plugins/elsa-workflows/elsa-workflow-designer/elsa-workflow-designer.esm.js"></script>
+    <script nomodule="" src="~/_content/Elsa.Dashboard/assets/js/plugins/elsa-workflows/elsa-workflow-designer/elsa-workflow-designer.js"></script>
+
+    <script src="~/lib/pouchdb-7.1.1.js"></script>
+
+
+    <link rel="stylesheet" href="~/pandora/vendors/metro4/css/metro-all.min.css">
+    <link rel="stylesheet" href="~/pandora/css/index.css">
+
+    <style>
+
+
+
+
+
+        .iconcolor {
+            color: blue;
+        }
+
+        .gridster .gs_w {
+            background: #2a2a2a
+        }
+
+        .headerpaneedit {
+            background-color: #272727 !important;
+        }
+
+        .headerpanenoedit {
+            background-color: transparent !important;
+        }
+
+        .paneedit {
+            background-color: #272727 !important;
+        }
+
+        .panenoedit {
+            background-color: transparent !important;
+        }
+
+        .removeborder {
+            border-width: 0px;
+        }
+        /*.styled-select select {
+                width: 414px;
+                height: 30px;
+                -webkit-appearance: none;
+                border: 1px solid #3d3d3d;
+                background: url(../../../img/dropdown-arrow.png) no-repeat right #272727;
+            }*/
+        /*select {
+                        width: 220px;
+                        background-color: #272727;
+                        height: 27px;
+                    }*/
+
+
+
+        #headerwindow {
+            text-align: center;
+            top: 5%;
+            /*-ms-transform: translateX(-50%);
+                -webkit-transform: translateX(-50%);
+                transform: translateX(-50%);*/
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%
+        }
+
+            #headerwindow .buttonBack {
+                width: 33%;
+                float: left;
+                text-align: left;
+            }
+
+            #headerwindow .buttonClose {
+                width: 33%;
+                float: right;
+                text-align: right;
+            }
+
+
+            #headerwindow .titlewid {
+                width: 33%;
+                float: left;
+                text-align: center;
+            }
+
+
+        .clseditCalculated {
+            margin-top: 5px;
+            vertical-align: bottom; /* Y */
+        }
+
+
+        .calculated-setting-row {
+            min-height: 80px;
+            vertical-align: bottom; /* Y */
+        }
+
+        .clseditCalculated .ul.board-toolbar {
+            top: 30px;
+        }
+
+        .clseditCalculated li {
+            display: inline;
+            padding-left: 3px;
+            padding-right: 3px;
+            /*background-color: black;*/
+            vertical-align: bottom; /* Y */
+        }
+
+        .ul.datasource-input-suffix {
+            top: 50px;
+            vertical-align: bottom; /* Y */
+        }
+
+
+
+        textarea .calculated-value-input {
+            position: relative;
+        }
+
+        #stateindicator {
+        }
+
+
+        .badge {
+        
+            position:relative !important;
+        
+        }
+    </style>
+
+
+    @await RenderSectionAsync("HeadScripts", false)
+
+
+
+    <script type="text/javascript">
+
+
+    </script>
+
+
+
+
+
+</head>
+
+<body>
+
+
+
+    <!-- Modal -->
+    <div class="modal fade" id="formModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    ...
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div id="board-content" style="display:none">
+        <img id="dash-logo" data-bind="attr:{src: header_image}, visible:header_image()">
+        <div class="gridster responsive-column-width">
+            <ul data-bind="grid: true">
+            </ul>
+        </div>
+    </div>
+
+    <div class="main-content" style="top:0px;display:block" id="main-content">
+        @*@await Html.PartialAsync("TopBar")*@
+        <!-- End Navbar -->
+        <!-- Header -->
+        <!-- Page content -->
+        @await Html.PartialAsync("Notifications")
+        @await RenderSectionAsync("ContentHeader", false)
+        @RenderBody()
+    </div>
+
+    @*<header id="main-header" style="display:block;top:0px">
+            <nav class="navbar navbar-expand-lg navbar-dark bg-primary" id="navmenu">
+                <a class="navbar-brand" href="#">Pollito</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <div class="navbar-collapse-header">
+                        <div class="row">
+                            <div class="col-6 collapse-brand">
+                                <a href="javascript:void(0)">
+                                        <img src="../../assets/img/brand/blue.png">
+                                    </a>
+                            </div>
+                            <div class="col-6 collapse-close">
+                                <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbar-default" aria-expanded="false" aria-label="Toggle navigation">
+                                    <span></span>
+                                    <span></span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <ul class="navbar-nav mr-auto">
+                        <li class="nav-item active">
+                            <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+                        </li>
+                        <li class="nav-item dropdown active">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Files
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <a class="dropdown-item" href="#">Action</a>
+                                <a class="dropdown-item" href="#">Another action</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="#">Something else here</a>
+                                <a class="dropdown-item" data-bind="click: loadDashboardFromLocalFile">
+                                    <i id="full-screen-icon" class="nav-link" href="#">Load dashboard</i>
+                                </a>
+                                <a class="dropdown-item">
+                                    <i class="oi oi-box" style=" color:white"></i>
+                                    <i class="nav-link" href="#" data-bind="click: saveDashboardClicked">Save</i>
+                                    <label class="nav-link" href="#" style="display: none;" data-bind="click: saveDashboard"
+                                           data-pretty="true">[Pretty]</label>
+                                    <label class="nav-link" href="#" style="display: none;" data-bind="click: saveDashboard"
+                                           data-pretty="false">[Minified]</label>
+                                </a>
+
+                            </div>
+
+
+                        </li>
+
+
+                        <li class="nav-item dropdown active">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Style
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+
+                                <a class="dropdown-item" data-bind="pluginEditor: {operation: 'add', type: 'style'" }>
+                                    <i id="full-screen-icon" class="nav-link" href="#">Board</i>
+                                </a>
+                                <a class="dropdown-item" data-bind="pluginEditor: {operation: 'add', type: 'style'" }>
+                                    <i id="full-screen-icon" class="nav-link" href="#">Pane</i>
+                                </a>
+
+                            </div>
+
+
+                        </li>
+
+                        <li id="add-pane" class="nav-item" data-bind="click: createPane">
+                            <button type="button" class="btn btn-outline-danger">Add Pane</button>
+                            <i class="oi oi-plus iconcolor">Add Pane</i>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
+                        </li>
+                        <li>
+                            <button type="button" class="btn btn-primary" id="btnSaveDash">
+                                Save
+                            </button>
+                        </li>
+
+
+                    </ul>
+
+                    <form class="form-inline my- my-lg-0">
+                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#formModal" id="btnModal" style="display:none">
+                            Launch demo modal
+                        </button>
+                        <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+                        <ul class="navbar-nav align-items-center  ml-md-auto ">
+
+                            <li class="nav-item dropdown" id="drpworkflows">
+                                <a class="nav-link" href="#" role="button" onclick="loadworkflows()" aria-expanded="false">
+                                    <i class="ni ni-bell-55"></i>
+                                </a>
+                            </li>
+                        </ul>
+
+
+                        @await Html.PartialAsync("buttons")
+
+                    </form>
+                </div>
+            </nav>
+
+
+
+
+
+
+
+            <div id="admin-bar" style="display:none">
+                <div id="admin-menu">
+                    <div id="board-tools">
+                        <h1 id="board-logo" class="title bordered">freeboard</h1>
+                        <h2 class="title">FILES</h2>
+                        <ul class="nav flex-column">
+                            <li class="nav-item" data-bind="click: loadDashboardFromLocalFile">
+                                <a id="full-screen-icon" class="nav-link" href="#">Load dashboard</a>
+                            </li>
+                            <li class="nav-item">
+                                <i class="oi oi-box" style=" color:white"></i>
+                                <a class="nav-link" href="#" data-bind="click: saveDashboardClicked">Save</a>
+                                <label class="nav-link" href="#" style="display: none;" data-bind="click: saveDashboard"
+                                       data-pretty="true">[Pretty]</label>
+                                <label class="nav-link" href="#" style="display: none;" data-bind="click: saveDashboard"
+                                       data-pretty="false">[Minified]</label>
+                            </li>
+                            <li id="add-pane" class="nav-item" data-bind="click: createPane">
+                                <i class="oi oi-plus iconcolor"></i><a href="#">Add Pane</a>
+                            </li>
+                        </ul>
+                        <div id="board-actions">
+                            <ul class="board-toolbar vertical">
+                                <li data-bind="click: loadDashboardFromLocalFile">
+                                    <i id="full-screen-icon"
+                                       class="oi oi-data-transfer-upload"></i><label id="full-screen">
+                                        Load dashboard
+
+                                    </label>
+                                </li>
+                                <li>
+                                    <i class="oi oi-box" style=" color:white"></i>
+                                    <label data-bind="click: saveDashboardClicked">Save Freeboard</label>
+                                    <label style="display: none;" data-bind="click: saveDashboard"
+                                           data-pretty="true">[Pretty]</label>
+                                    <label style="display: none;" data-bind="click: saveDashboard"
+                                           data-pretty="false">[Minified]</label>
+                                </li>
+                                <li id="add-pane" data-bind="click: createPane">
+                                    <i class="icon-plus icon-white"></i><label>Add Pane</label>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div id="datasources">
+                        <button type="button" id="btdev" onclick="showd()">dev</button>
+                        <button type="button" id="btnmodal" data-toggle="modal" onclick="fexample()">Launch modal</button>
+                        <h2 class="title">DATASOURCES</h2>
+
+                        <div class="datasource-list-container">
+                            <table class="table table-condensed sub-table" id="datasources-list"
+                                   data-bind="if: datasources().length">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Last Updated</th>
+                                        <th>&nbsp;</th>
+                                    </tr>
+                                </thead>
+                                <tbody data-bind="foreach: datasources">
+                                    <tr>
+                                        <td>
+                                            <span class="text-button datasource-name"
+                                                  data-bind="text: name, pluginEditor: {operation: 'edit', type: 'datasource'}"></span>
+                                        </td>
+                                        <td data-bind="text: last_updated"></td>
+                                        <td>
+                                            <ul class="board-toolbar">
+                                                <li data-bind="click: updateNow">
+                                                    <i class="icon-refresh icon-white"></i>
+                                                </li>
+                                                <li data-bind="pluginEditor: {operation: 'delete', type: 'datasource'}">
+                                                    <i class="icon-trash icon-white"></i>
+                                                </li>
+                                            </ul>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <span class="text-button table-operation"
+                              data-bind="pluginEditor: {operation: 'add', type: 'datasource'}">
+                            ADD
+                        </span>
+                    </div>
+
+                    <div id="style-tools">
+                        <h2 class="title">STYLES</h2>
+                        <ul class="nav flex-column">
+                            <li id="add-style" class="nav-item" data-bind="pluginEditor: {operation: 'add', type: 'style'}">
+                                <a class="nav-link" href="#">Layout</a>
+                            </li>
+
+                        </ul>
+                        <div id="style-actions">
+
+                            <ul class="board-toolbar vertical">
+
+
+                            </ul>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div id="column-tools" class="responsive-column-width">
+                <ul class="board-toolbar left-columns">
+                    <li class="column-tool add" data-bind="click: addGridColumnLeft">
+                        <span class="column-icon right"></span><span class="oi oi-arrow-left iconcolor"></span>
+                    </li>
+                    <li class="column-tool sub" data-bind="click: subGridColumnLeft">
+                        <span class="column-icon left"></span><span class="oi oi-arrow-right iconcolor"></span>
+                    </li>
+                </ul>
+                <ul class="board-toolbar right-columns">
+                    <li class="column-tool sub" data-bind="click: subGridColumnRight">
+                        <span class="column-icon right"></span><span class="oi oi-arrow-left iconcolor"></span>
+                    </li>
+                    <li class="column-tool add" data-bind="click: addGridColumnRight">
+                        <span class="column-icon left"></span><span class="oi oi-arrow-right iconcolor"></span>
+                    </li>
+                </ul>
+            </div>
+            <div id="toggle-header" data-bind="click: toggleEditing">
+                <i id="toggle-header-icon" class="oi oi-chevron-bottom iconcolor"></i>
+            </div>
+        </header>*@
+
+
+
+
+
+    <!--<script src="/_content/Elsa.Dashboard/assets/js/workflow-editor.js"></script>-->
+    @*<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>*@
+    @*<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>*@
+    @*<script src="~/_content/Elsa.Dashboard/assets/js/plugins/jquery/dist/jquery.min.js"></script>*@
+    @*<script src="~/_content/Elsa.Dashboard/assets/js/plugins/bootstrap/dist/js/bootstrap.bundle.min.js"></script>*@
+    @*<script src="@Url.Content("/lib/cement.js")"></script>*@
+    @await Html.PartialAsync("CustomScripts")
+    @await RenderSectionAsync("FootScripts", false)
+
+
+    <script src="/_content/Elsa.Dashboard/assets/js/plugins/jquery/dist/jquery.min.js"></script>
+    <script src="/_content/Elsa.Dashboard/assets/js/plugins/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    @*<script src="~/lib/custom.js"></script>*@
+    <script src="~/lib/workflow.js"></script>
+    <script src="~/pandora/vendors/metro4/js/metro.min.js"></script>
+    <script>
+        Metro.init();
+    </script>
+
+</body>
+
+</html>
