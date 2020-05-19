@@ -35,8 +35,8 @@ namespace Elsa.Persistence.YesSql.Indexes
                         Version = document.Version,
                         IsPublished = document.IsPublished,
                         IsLatest = document.IsLatest,
-                        IsDisabled = document.IsDisabled,
                         UserId= document.UserId
+                        IsDisabled = document.IsDisabled
                     }
                 );
 
