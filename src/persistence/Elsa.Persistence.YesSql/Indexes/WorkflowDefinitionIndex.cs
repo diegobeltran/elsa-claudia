@@ -13,6 +13,7 @@ namespace Elsa.Persistence.YesSql.Indexes
         public bool IsLatest { get; set; }
         public bool IsPublished { get; set; }
         public bool IsDisabled { get; set; }
+        public string UserId { get; set; }
     }
 
     public class WorkflowDefinitionStartActivitiesIndex : MapIndex
@@ -34,6 +35,7 @@ namespace Elsa.Persistence.YesSql.Indexes
                         Version = document.Version,
                         IsPublished = document.IsPublished,
                         IsLatest = document.IsLatest,
+                        UserId= document.UserId
                         IsDisabled = document.IsDisabled
                     }
                 );
